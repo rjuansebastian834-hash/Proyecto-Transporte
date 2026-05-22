@@ -1,3 +1,7 @@
+// ===============================
+// VENTANATERMINALES.JAVA
+// ===============================
+
 package co.edu.poligran.paradigmas.frontend;
 
 import javax.swing.*;
@@ -10,140 +14,122 @@ public class VentanaTerminales extends JFrame {
     private JTextField txtCiudad;
 
     private JTable tabla;
+
     private DefaultTableModel modelo;
 
     public VentanaTerminales() {
 
-        setTitle("CRUD Terminales");
+        setTitle("Gestión de Terminales");
 
-        setSize(700,500);
+        setSize(850,550);
 
         setLocationRelativeTo(null);
 
-        setVisible(true);
-
         setLayout(new BorderLayout());
 
-        JPanel formulario = new JPanel(new GridLayout(3,2,10,10));
-
-        formulario.setBorder(
-                BorderFactory.createEmptyBorder(20,20,20,20)
+        getContentPane().setBackground(
+                new Color(15,23,42)
         );
 
-        formulario.add(new JLabel("Nombre"));
+        JLabel titulo = new JLabel(
+                "GESTIÓN DE TERMINALES",
+                SwingConstants.CENTER
+        );
+
+        titulo.setFont(
+                new Font("Segoe UI", Font.BOLD, 28)
+        );
+
+        titulo.setForeground(Color.WHITE);
+
+        add(titulo, BorderLayout.NORTH);
+
+        JPanel centro = new JPanel(new BorderLayout());
+
+        centro.setBackground(new Color(15,23,42));
+
+        JPanel formulario = new JPanel(
+                new GridLayout(2,2,15,15)
+        );
+
+        formulario.setBackground(new Color(30,41,59));
+
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setForeground(Color.WHITE);
 
         txtNombre = new JTextField();
 
-        formulario.add(txtNombre);
-
-        formulario.add(new JLabel("Ciudad"));
+        JLabel lblCiudad = new JLabel("Ciudad:");
+        lblCiudad.setForeground(Color.WHITE);
 
         txtCiudad = new JTextField();
 
+        formulario.add(lblNombre);
+        formulario.add(txtNombre);
+        formulario.add(lblCiudad);
         formulario.add(txtCiudad);
 
-        add(formulario, BorderLayout.NORTH);
+        centro.add(formulario, BorderLayout.NORTH);
 
         modelo = new DefaultTableModel();
 
         modelo.addColumn("Nombre");
-
         modelo.addColumn("Ciudad");
 
         tabla = new JTable(modelo);
 
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        centro.add(new JScrollPane(tabla), BorderLayout.CENTER);
+
+        add(centro, BorderLayout.CENTER);
 
         JPanel botones = new JPanel();
 
-        JButton guardar = new JButton("Guardar");
+        botones.setBackground(new Color(15,23,42));
 
-        JButton actualizar = new JButton("Actualizar");
+        JButton btnGuardar = crearBoton("Guardar");
+        JButton btnEliminar = crearBoton("Eliminar");
 
-        JButton eliminar = new JButton("Eliminar");
-
-        JButton limpiar = new JButton("Limpiar");
-
-        botones.add(guardar);
-
-        botones.add(actualizar);
-
-        botones.add(eliminar);
-
-        botones.add(limpiar);
+        botones.add(btnGuardar);
+        botones.add(btnEliminar);
 
         add(botones, BorderLayout.SOUTH);
 
-        guardar.addActionListener(e -> guardar());
+        btnGuardar.addActionListener(e -> {
 
-        actualizar.addActionListener(e -> actualizar());
+            modelo.addRow(new Object[] {
+                    txtNombre.getText(),
+                    txtCiudad.getText()
+            });
 
-        eliminar.addActionListener(e -> eliminar());
+            limpiar();
+        });
 
-        limpiar.addActionListener(e -> limpiar());
-
-        tabla.getSelectionModel().addListSelectionListener(e -> {
+        btnEliminar.addActionListener(e -> {
 
             int fila = tabla.getSelectedRow();
 
             if(fila != -1) {
-
-                txtNombre.setText(
-                        modelo.getValueAt(fila,0).toString()
-                );
-
-                txtCiudad.setText(
-                        modelo.getValueAt(fila,1).toString()
-                );
+                modelo.removeRow(fila);
             }
         });
+
+        setVisible(true);
     }
 
-    private void guardar() {
+    private JButton crearBoton(String texto) {
 
-        if(txtNombre.getText().isEmpty()
-                || txtCiudad.getText().isEmpty()) {
+        JButton boton = new JButton(texto);
 
-            JOptionPane.showMessageDialog(this,
-                    "Completa todos los campos");
+        boton.setBackground(new Color(191,219,254));
 
-            return;
-        }
+        boton.setForeground(Color.BLACK);
 
-        modelo.addRow(new Object[] {
-                txtNombre.getText(),
-                txtCiudad.getText()
-        });
-
-        limpiar();
-    }
-
-    private void actualizar() {
-
-        int fila = tabla.getSelectedRow();
-
-        if(fila != -1) {
-
-            modelo.setValueAt(txtNombre.getText(), fila,0);
-
-            modelo.setValueAt(txtCiudad.getText(), fila,1);
-        }
-    }
-
-    private void eliminar() {
-
-        int fila = tabla.getSelectedRow();
-
-        if(fila != -1) {
-
-            modelo.removeRow(fila);
-        }
+        return boton;
     }
 
     private void limpiar() {
 
         txtNombre.setText("");
-
         txtCiudad.setText("");
     }
 }

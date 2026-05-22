@@ -15,39 +15,97 @@ public class VentanaClientes extends JFrame {
 
     public VentanaClientes() {
 
-        setTitle("CRUD Clientes");
+        setTitle("Gestión de Clientes");
 
-        setSize(700,500);
+        setSize(850,550);
 
         setLocationRelativeTo(null);
 
-        setVisible(true);
-
         setLayout(new BorderLayout());
 
-        // PANEL FORMULARIO
-
-        JPanel formulario = new JPanel();
-
-        formulario.setLayout(new GridLayout(3,2,10,10));
-
-        formulario.setBorder(
-                BorderFactory.createEmptyBorder(20,20,20,20)
+        getContentPane().setBackground(
+                new Color(15,23,42)
         );
 
-        formulario.add(new JLabel("Nombre"));
+        // TITULO
+
+        JLabel titulo = new JLabel(
+                "GESTIÓN DE CLIENTES",
+                SwingConstants.CENTER
+        );
+
+        titulo.setFont(
+                new Font("Segoe UI", Font.BOLD, 28)
+        );
+
+        titulo.setForeground(Color.WHITE);
+
+        titulo.setBorder(
+                BorderFactory.createEmptyBorder(20,0,20,0)
+        );
+
+        add(titulo, BorderLayout.NORTH);
+
+        // PANEL CENTRAL
+
+        JPanel centro = new JPanel(
+                new BorderLayout()
+        );
+
+        centro.setBackground(
+                new Color(15,23,42)
+        );
+
+        // FORMULARIO
+
+        JPanel formulario = new JPanel(
+                new GridLayout(2,2,15,15)
+        );
+
+        formulario.setBackground(
+                new Color(30,41,59)
+        );
+
+        formulario.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.WHITE),
+                        "Datos del Cliente",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        JLabel lblNombre = new JLabel("Nombre:");
+
+        lblNombre.setForeground(Color.WHITE);
+
+        lblNombre.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
 
         txtNombre = new JTextField();
 
-        formulario.add(txtNombre);
+        JLabel lblDocumento = new JLabel("Documento:");
 
-        formulario.add(new JLabel("Documento"));
+        lblDocumento.setForeground(Color.WHITE);
+
+        lblDocumento.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
 
         txtDocumento = new JTextField();
 
+        formulario.add(lblNombre);
+
+        formulario.add(txtNombre);
+
+        formulario.add(lblDocumento);
+
         formulario.add(txtDocumento);
 
-        add(formulario, BorderLayout.NORTH);
+        centro.add(formulario, BorderLayout.NORTH);
 
         // TABLA
 
@@ -59,21 +117,48 @@ public class VentanaClientes extends JFrame {
 
         tabla = new JTable(modelo);
 
+        tabla.setRowHeight(28);
+
+        tabla.setFont(
+                new Font("Segoe UI", Font.PLAIN, 14)
+        );
+
+        tabla.getTableHeader().setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
         JScrollPane scroll = new JScrollPane(tabla);
 
-        add(scroll, BorderLayout.CENTER);
+        scroll.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.WHITE),
+                        "Clientes Registrados",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        centro.add(scroll, BorderLayout.CENTER);
+
+        add(centro, BorderLayout.CENTER);
 
         // BOTONES
 
         JPanel botones = new JPanel();
 
-        JButton btnGuardar = new JButton("Guardar");
+        botones.setBackground(
+                new Color(15,23,42)
+        );
 
-        JButton btnActualizar = new JButton("Actualizar");
+        JButton btnGuardar = crearBoton("Guardar");
 
-        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnActualizar = crearBoton("Actualizar");
 
-        JButton btnLimpiar = new JButton("Limpiar");
+        JButton btnEliminar = crearBoton("Eliminar");
+
+        JButton btnLimpiar = crearBoton("Limpiar");
 
         botones.add(btnGuardar);
 
@@ -87,15 +172,21 @@ public class VentanaClientes extends JFrame {
 
         // EVENTOS
 
-        btnGuardar.addActionListener(e -> guardar());
+        btnGuardar.addActionListener(
+                e -> guardar()
+        );
 
-        btnActualizar.addActionListener(e -> actualizar());
+        btnActualizar.addActionListener(
+                e -> actualizar()
+        );
 
-        btnEliminar.addActionListener(e -> eliminar());
+        btnEliminar.addActionListener(
+                e -> eliminar()
+        );
 
-        btnLimpiar.addActionListener(e -> limpiar());
-
-        // SELECCIONAR TABLA
+        btnLimpiar.addActionListener(
+                e -> limpiar()
+        );
 
         tabla.getSelectionModel().addListSelectionListener(e -> {
 
@@ -112,89 +203,94 @@ public class VentanaClientes extends JFrame {
                 );
             }
         });
+
+        setVisible(true);
     }
 
-    // GUARDAR
+    // BOTON ESTILO
+
+    private JButton crearBoton(String texto) {
+
+        JButton boton = new JButton(texto);
+
+        boton.setBackground(
+                new Color(191,219,254)
+        );
+
+        boton.setForeground(Color.BLACK);
+
+        boton.setFocusPainted(false);
+
+        boton.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        boton.setCursor(
+                new Cursor(Cursor.HAND_CURSOR)
+        );
+
+        return boton;
+    }
+
+    // FUNCIONES CRUD
 
     private void guardar() {
 
-        String nombre = txtNombre.getText();
+        if(txtNombre.getText().isEmpty()
+                || txtDocumento.getText().isEmpty()) {
 
-        String documento = txtDocumento.getText();
-
-        if(nombre.isEmpty() || documento.isEmpty()) {
-
-            JOptionPane.showMessageDialog(this,
-                    "Completa todos los campos");
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Completa todos los campos"
+            );
 
             return;
         }
 
         modelo.addRow(new Object[] {
-                nombre,
-                documento
-        });
 
-        JOptionPane.showMessageDialog(this,
-                "Cliente registrado");
+                txtNombre.getText(),
+
+                txtDocumento.getText()
+        });
 
         limpiar();
     }
-
-    // ACTUALIZAR
 
     private void actualizar() {
 
         int fila = tabla.getSelectedRow();
 
-        if(fila == -1) {
+        if(fila != -1) {
 
-            JOptionPane.showMessageDialog(this,
-                    "Selecciona un cliente");
+            modelo.setValueAt(
+                    txtNombre.getText(),
+                    fila,
+                    0
+            );
 
-            return;
+            modelo.setValueAt(
+                    txtDocumento.getText(),
+                    fila,
+                    1
+            );
         }
-
-        modelo.setValueAt(txtNombre.getText(), fila,0);
-
-        modelo.setValueAt(txtDocumento.getText(), fila,1);
-
-        JOptionPane.showMessageDialog(this,
-                "Cliente actualizado");
-
-        limpiar();
     }
-
-    // ELIMINAR
 
     private void eliminar() {
 
         int fila = tabla.getSelectedRow();
 
-        if(fila == -1) {
+        if(fila != -1) {
 
-            JOptionPane.showMessageDialog(this,
-                    "Selecciona un cliente");
-
-            return;
+            modelo.removeRow(fila);
         }
-
-        modelo.removeRow(fila);
-
-        JOptionPane.showMessageDialog(this,
-                "Cliente eliminado");
-
-        limpiar();
     }
-
-    // LIMPIAR
 
     private void limpiar() {
 
         txtNombre.setText("");
 
         txtDocumento.setText("");
-
-        tabla.clearSelection();
     }
 }

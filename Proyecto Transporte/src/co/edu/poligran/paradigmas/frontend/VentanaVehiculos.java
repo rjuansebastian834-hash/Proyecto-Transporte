@@ -10,39 +10,104 @@ public class VentanaVehiculos extends JFrame {
     private JTextField txtModelo;
 
     private JTable tabla;
+
     private DefaultTableModel modelo;
 
     public VentanaVehiculos() {
 
-        setTitle("CRUD Vehículos");
+        setTitle("Gestión de Vehículos");
 
-        setSize(700,500);
+        setSize(850,550);
 
         setLocationRelativeTo(null);
 
-        setVisible(true);
-
         setLayout(new BorderLayout());
 
-        JPanel formulario = new JPanel(new GridLayout(3,2,10,10));
-
-        formulario.setBorder(
-                BorderFactory.createEmptyBorder(20,20,20,20)
+        getContentPane().setBackground(
+                new Color(15,23,42)
         );
 
-        formulario.add(new JLabel("Placa"));
+        // TITULO
+
+        JLabel titulo = new JLabel(
+                "GESTIÓN DE VEHÍCULOS",
+                SwingConstants.CENTER
+        );
+
+        titulo.setFont(
+                new Font("Segoe UI", Font.BOLD, 28)
+        );
+
+        titulo.setForeground(Color.WHITE);
+
+        titulo.setBorder(
+                BorderFactory.createEmptyBorder(20,0,20,0)
+        );
+
+        add(titulo, BorderLayout.NORTH);
+
+        // PANEL CENTRAL
+
+        JPanel centro = new JPanel(
+                new BorderLayout()
+        );
+
+        centro.setBackground(
+                new Color(15,23,42)
+        );
+
+        // FORMULARIO
+
+        JPanel formulario = new JPanel(
+                new GridLayout(2,2,15,15)
+        );
+
+        formulario.setBackground(
+                new Color(30,41,59)
+        );
+
+        formulario.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.WHITE),
+                        "Datos del Vehículo",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        JLabel lblPlaca = new JLabel("Placa:");
+
+        lblPlaca.setForeground(Color.WHITE);
+
+        lblPlaca.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
 
         txtPlaca = new JTextField();
 
-        formulario.add(txtPlaca);
+        JLabel lblModelo = new JLabel("Modelo:");
 
-        formulario.add(new JLabel("Modelo"));
+        lblModelo.setForeground(Color.WHITE);
+
+        lblModelo.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
 
         txtModelo = new JTextField();
 
+        formulario.add(lblPlaca);
+
+        formulario.add(txtPlaca);
+
+        formulario.add(lblModelo);
+
         formulario.add(txtModelo);
 
-        add(formulario, BorderLayout.NORTH);
+        centro.add(formulario, BorderLayout.NORTH);
+
+        // TABLA
 
         modelo = new DefaultTableModel();
 
@@ -52,35 +117,76 @@ public class VentanaVehiculos extends JFrame {
 
         tabla = new JTable(modelo);
 
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        tabla.setRowHeight(28);
+
+        tabla.setFont(
+                new Font("Segoe UI", Font.PLAIN, 14)
+        );
+
+        tabla.getTableHeader().setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        JScrollPane scroll = new JScrollPane(tabla);
+
+        scroll.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.WHITE),
+                        "Vehículos Registrados",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        centro.add(scroll, BorderLayout.CENTER);
+
+        add(centro, BorderLayout.CENTER);
+
+        // BOTONES
 
         JPanel botones = new JPanel();
 
-        JButton guardar = new JButton("Guardar");
+        botones.setBackground(
+                new Color(15,23,42)
+        );
 
-        JButton actualizar = new JButton("Actualizar");
+        JButton btnGuardar = crearBoton("Guardar");
 
-        JButton eliminar = new JButton("Eliminar");
+        JButton btnActualizar = crearBoton("Actualizar");
 
-        JButton limpiar = new JButton("Limpiar");
+        JButton btnEliminar = crearBoton("Eliminar");
 
-        botones.add(guardar);
+        JButton btnLimpiar = crearBoton("Limpiar");
 
-        botones.add(actualizar);
+        botones.add(btnGuardar);
 
-        botones.add(eliminar);
+        botones.add(btnActualizar);
 
-        botones.add(limpiar);
+        botones.add(btnEliminar);
+
+        botones.add(btnLimpiar);
 
         add(botones, BorderLayout.SOUTH);
 
-        guardar.addActionListener(e -> guardar());
+        // EVENTOS
 
-        actualizar.addActionListener(e -> actualizar());
+        btnGuardar.addActionListener(
+                e -> guardar()
+        );
 
-        eliminar.addActionListener(e -> eliminar());
+        btnActualizar.addActionListener(
+                e -> actualizar()
+        );
 
-        limpiar.addActionListener(e -> limpiar());
+        btnEliminar.addActionListener(
+                e -> eliminar()
+        );
+
+        btnLimpiar.addActionListener(
+                e -> limpiar()
+        );
 
         tabla.getSelectionModel().addListSelectionListener(e -> {
 
@@ -97,21 +203,54 @@ public class VentanaVehiculos extends JFrame {
                 );
             }
         });
+
+        setVisible(true);
     }
+
+    // BOTON ESTILO
+
+    private JButton crearBoton(String texto) {
+
+        JButton boton = new JButton(texto);
+
+        boton.setBackground(
+                new Color(191,219,254)
+        );
+
+        boton.setForeground(Color.BLACK);
+
+        boton.setFocusPainted(false);
+
+        boton.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        boton.setCursor(
+                new Cursor(Cursor.HAND_CURSOR)
+        );
+
+        return boton;
+    }
+
+    // FUNCIONES CRUD
 
     private void guardar() {
 
         if(txtPlaca.getText().isEmpty()
                 || txtModelo.getText().isEmpty()) {
 
-            JOptionPane.showMessageDialog(this,
-                    "Completa todos los campos");
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Completa todos los campos"
+            );
 
             return;
         }
 
         modelo.addRow(new Object[] {
+
                 txtPlaca.getText(),
+
                 txtModelo.getText()
         });
 
@@ -124,9 +263,17 @@ public class VentanaVehiculos extends JFrame {
 
         if(fila != -1) {
 
-            modelo.setValueAt(txtPlaca.getText(), fila,0);
+            modelo.setValueAt(
+                    txtPlaca.getText(),
+                    fila,
+                    0
+            );
 
-            modelo.setValueAt(txtModelo.getText(), fila,1);
+            modelo.setValueAt(
+                    txtModelo.getText(),
+                    fila,
+                    1
+            );
         }
     }
 

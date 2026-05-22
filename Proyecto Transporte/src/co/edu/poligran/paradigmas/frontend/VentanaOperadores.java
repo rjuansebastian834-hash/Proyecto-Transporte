@@ -14,60 +14,178 @@ public class VentanaOperadores extends JFrame {
 
     public VentanaOperadores() {
 
-        setTitle("CRUD Operadores");
-        setSize(700,500);
+        setTitle("Gestión de Operadores");
+
+        setSize(850,550);
+
         setLocationRelativeTo(null);
-        setVisible(true);
 
         setLayout(new BorderLayout());
 
-        JPanel formulario = new JPanel(new GridLayout(3,2,10,10));
-
-        formulario.setBorder(
-                BorderFactory.createEmptyBorder(20,20,20,20)
+        getContentPane().setBackground(
+                new Color(15,23,42)
         );
 
-        formulario.add(new JLabel("Nombre"));
+        // TITULO
+
+        JLabel titulo = new JLabel(
+                "GESTIÓN DE OPERADORES",
+                SwingConstants.CENTER
+        );
+
+        titulo.setFont(
+                new Font("Segoe UI", Font.BOLD, 28)
+        );
+
+        titulo.setForeground(Color.WHITE);
+
+        titulo.setBorder(
+                BorderFactory.createEmptyBorder(20,0,20,0)
+        );
+
+        add(titulo, BorderLayout.NORTH);
+
+        // PANEL CENTRAL
+
+        JPanel centro = new JPanel(
+                new BorderLayout()
+        );
+
+        centro.setBackground(
+                new Color(15,23,42)
+        );
+
+        // FORMULARIO
+
+        JPanel formulario = new JPanel(
+                new GridLayout(2,2,15,15)
+        );
+
+        formulario.setBackground(
+                new Color(30,41,59)
+        );
+
+        formulario.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.WHITE),
+                        "Datos del Operador",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        JLabel lblNombre = new JLabel("Nombre:");
+
+        lblNombre.setForeground(Color.WHITE);
+
+        lblNombre.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
 
         txtNombre = new JTextField();
 
-        formulario.add(txtNombre);
+        JLabel lblLicencia = new JLabel("Licencia:");
 
-        formulario.add(new JLabel("Licencia"));
+        lblLicencia.setForeground(Color.WHITE);
+
+        lblLicencia.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
 
         txtLicencia = new JTextField();
 
+        formulario.add(lblNombre);
+
+        formulario.add(txtNombre);
+
+        formulario.add(lblLicencia);
+
         formulario.add(txtLicencia);
 
-        add(formulario, BorderLayout.NORTH);
+        centro.add(formulario, BorderLayout.NORTH);
+
+        // TABLA
 
         modelo = new DefaultTableModel();
 
         modelo.addColumn("Nombre");
+
         modelo.addColumn("Licencia");
 
         tabla = new JTable(modelo);
 
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        tabla.setRowHeight(28);
+
+        tabla.setFont(
+                new Font("Segoe UI", Font.PLAIN, 14)
+        );
+
+        tabla.getTableHeader().setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        JScrollPane scroll = new JScrollPane(tabla);
+
+        scroll.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.WHITE),
+                        "Operadores Registrados",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        centro.add(scroll, BorderLayout.CENTER);
+
+        add(centro, BorderLayout.CENTER);
+
+        // BOTONES
 
         JPanel botones = new JPanel();
 
-        JButton guardar = new JButton("Guardar");
-        JButton actualizar = new JButton("Actualizar");
-        JButton eliminar = new JButton("Eliminar");
-        JButton limpiar = new JButton("Limpiar");
+        botones.setBackground(
+                new Color(15,23,42)
+        );
 
-        botones.add(guardar);
-        botones.add(actualizar);
-        botones.add(eliminar);
-        botones.add(limpiar);
+        JButton btnGuardar = crearBoton("Guardar");
+
+        JButton btnActualizar = crearBoton("Actualizar");
+
+        JButton btnEliminar = crearBoton("Eliminar");
+
+        JButton btnLimpiar = crearBoton("Limpiar");
+
+        botones.add(btnGuardar);
+
+        botones.add(btnActualizar);
+
+        botones.add(btnEliminar);
+
+        botones.add(btnLimpiar);
 
         add(botones, BorderLayout.SOUTH);
 
-        guardar.addActionListener(e -> guardar());
-        actualizar.addActionListener(e -> actualizar());
-        eliminar.addActionListener(e -> eliminar());
-        limpiar.addActionListener(e -> limpiar());
+        // EVENTOS
+
+        btnGuardar.addActionListener(
+                e -> guardar()
+        );
+
+        btnActualizar.addActionListener(
+                e -> actualizar()
+        );
+
+        btnEliminar.addActionListener(
+                e -> eliminar()
+        );
+
+        btnLimpiar.addActionListener(
+                e -> limpiar()
+        );
 
         tabla.getSelectionModel().addListSelectionListener(e -> {
 
@@ -84,21 +202,54 @@ public class VentanaOperadores extends JFrame {
                 );
             }
         });
+
+        setVisible(true);
     }
+
+    // BOTON ESTILO
+
+    private JButton crearBoton(String texto) {
+
+        JButton boton = new JButton(texto);
+
+        boton.setBackground(
+                new Color(191,219,254)
+        );
+
+        boton.setForeground(Color.BLACK);
+
+        boton.setFocusPainted(false);
+
+        boton.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        boton.setCursor(
+                new Cursor(Cursor.HAND_CURSOR)
+        );
+
+        return boton;
+    }
+
+    // FUNCIONES CRUD
 
     private void guardar() {
 
         if(txtNombre.getText().isEmpty()
                 || txtLicencia.getText().isEmpty()) {
 
-            JOptionPane.showMessageDialog(this,
-                    "Completa todos los campos");
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Completa todos los campos"
+            );
 
             return;
         }
 
         modelo.addRow(new Object[] {
+
                 txtNombre.getText(),
+
                 txtLicencia.getText()
         });
 
@@ -111,9 +262,17 @@ public class VentanaOperadores extends JFrame {
 
         if(fila != -1) {
 
-            modelo.setValueAt(txtNombre.getText(), fila,0);
+            modelo.setValueAt(
+                    txtNombre.getText(),
+                    fila,
+                    0
+            );
 
-            modelo.setValueAt(txtLicencia.getText(), fila,1);
+            modelo.setValueAt(
+                    txtLicencia.getText(),
+                    fila,
+                    1
+            );
         }
     }
 
@@ -130,6 +289,7 @@ public class VentanaOperadores extends JFrame {
     private void limpiar() {
 
         txtNombre.setText("");
+
         txtLicencia.setText("");
     }
 }

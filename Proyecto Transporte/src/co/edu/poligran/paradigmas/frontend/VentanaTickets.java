@@ -1,3 +1,7 @@
+// ===============================
+// VENTANATICKETS.JAVA
+// ===============================
+
 package co.edu.poligran.paradigmas.frontend;
 
 import javax.swing.*;
@@ -6,113 +10,139 @@ import java.awt.*;
 
 public class VentanaTickets extends JFrame {
 
-    private JTextField txtPasajero;
-    private JTextField txtDestino;
+    private JTextField txtCodigo;
+    private JTextField txtValor;
 
     private JTable tabla;
+
     private DefaultTableModel modelo;
 
     public VentanaTickets() {
 
-        setTitle("CRUD Tickets");
+        setTitle("Gestión de Tickets");
 
-        setSize(700,500);
+        setSize(850,550);
 
         setLocationRelativeTo(null);
 
-        setVisible(true);
-
         setLayout(new BorderLayout());
 
-        JPanel formulario = new JPanel(new GridLayout(3,2,10,10));
-
-        formulario.setBorder(
-                BorderFactory.createEmptyBorder(20,20,20,20)
+        getContentPane().setBackground(
+                new Color(15,23,42)
         );
 
-        formulario.add(new JLabel("Pasajero"));
+        JLabel titulo = new JLabel(
+                "GESTIÓN DE TICKETS",
+                SwingConstants.CENTER
+        );
 
-        txtPasajero = new JTextField();
+        titulo.setFont(
+                new Font("Segoe UI", Font.BOLD, 28)
+        );
 
-        formulario.add(txtPasajero);
+        titulo.setForeground(Color.WHITE);
 
-        formulario.add(new JLabel("Destino"));
+        titulo.setBorder(
+                BorderFactory.createEmptyBorder(20,0,20,0)
+        );
 
-        txtDestino = new JTextField();
+        add(titulo, BorderLayout.NORTH);
 
-        formulario.add(txtDestino);
+        JPanel centro = new JPanel(new BorderLayout());
 
-        add(formulario, BorderLayout.NORTH);
+        centro.setBackground(new Color(15,23,42));
+
+        JPanel formulario = new JPanel(
+                new GridLayout(2,2,15,15)
+        );
+
+        formulario.setBackground(new Color(30,41,59));
+
+        formulario.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.WHITE),
+                        "Datos del Ticket",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        JLabel lblCodigo = new JLabel("Código:");
+        lblCodigo.setForeground(Color.WHITE);
+
+        txtCodigo = new JTextField();
+
+        JLabel lblValor = new JLabel("Valor:");
+        lblValor.setForeground(Color.WHITE);
+
+        txtValor = new JTextField();
+
+        formulario.add(lblCodigo);
+        formulario.add(txtCodigo);
+        formulario.add(lblValor);
+        formulario.add(txtValor);
+
+        centro.add(formulario, BorderLayout.NORTH);
 
         modelo = new DefaultTableModel();
 
-        modelo.addColumn("Pasajero");
-
-        modelo.addColumn("Destino");
+        modelo.addColumn("Código");
+        modelo.addColumn("Valor");
 
         tabla = new JTable(modelo);
 
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        JScrollPane scroll = new JScrollPane(tabla);
+
+        centro.add(scroll, BorderLayout.CENTER);
+
+        add(centro, BorderLayout.CENTER);
 
         JPanel botones = new JPanel();
 
-        JButton guardar = new JButton("Guardar");
+        botones.setBackground(new Color(15,23,42));
 
-        JButton actualizar = new JButton("Actualizar");
+        JButton btnGuardar = crearBoton("Guardar");
+        JButton btnActualizar = crearBoton("Actualizar");
+        JButton btnEliminar = crearBoton("Eliminar");
+        JButton btnLimpiar = crearBoton("Limpiar");
 
-        JButton eliminar = new JButton("Eliminar");
-
-        JButton limpiar = new JButton("Limpiar");
-
-        botones.add(guardar);
-
-        botones.add(actualizar);
-
-        botones.add(eliminar);
-
-        botones.add(limpiar);
+        botones.add(btnGuardar);
+        botones.add(btnActualizar);
+        botones.add(btnEliminar);
+        botones.add(btnLimpiar);
 
         add(botones, BorderLayout.SOUTH);
 
-        guardar.addActionListener(e -> guardar());
+        btnGuardar.addActionListener(e -> guardar());
+        btnActualizar.addActionListener(e -> actualizar());
+        btnEliminar.addActionListener(e -> eliminar());
+        btnLimpiar.addActionListener(e -> limpiar());
 
-        actualizar.addActionListener(e -> actualizar());
+        setVisible(true);
+    }
 
-        eliminar.addActionListener(e -> eliminar());
+    private JButton crearBoton(String texto) {
 
-        limpiar.addActionListener(e -> limpiar());
+        JButton boton = new JButton(texto);
 
-        tabla.getSelectionModel().addListSelectionListener(e -> {
+        boton.setBackground(new Color(191,219,254));
 
-            int fila = tabla.getSelectedRow();
+        boton.setForeground(Color.BLACK);
 
-            if(fila != -1) {
+        boton.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
 
-                txtPasajero.setText(
-                        modelo.getValueAt(fila,0).toString()
-                );
-
-                txtDestino.setText(
-                        modelo.getValueAt(fila,1).toString()
-                );
-            }
-        });
+        return boton;
     }
 
     private void guardar() {
 
-        if(txtPasajero.getText().isEmpty()
-                || txtDestino.getText().isEmpty()) {
-
-            JOptionPane.showMessageDialog(this,
-                    "Completa todos los campos");
-
-            return;
-        }
-
         modelo.addRow(new Object[] {
-                txtPasajero.getText(),
-                txtDestino.getText()
+                txtCodigo.getText(),
+                txtValor.getText()
         });
 
         limpiar();
@@ -124,9 +154,17 @@ public class VentanaTickets extends JFrame {
 
         if(fila != -1) {
 
-            modelo.setValueAt(txtPasajero.getText(), fila,0);
+            modelo.setValueAt(
+                    txtCodigo.getText(),
+                    fila,
+                    0
+            );
 
-            modelo.setValueAt(txtDestino.getText(), fila,1);
+            modelo.setValueAt(
+                    txtValor.getText(),
+                    fila,
+                    1
+            );
         }
     }
 
@@ -142,8 +180,7 @@ public class VentanaTickets extends JFrame {
 
     private void limpiar() {
 
-        txtPasajero.setText("");
-
-        txtDestino.setText("");
+        txtCodigo.setText("");
+        txtValor.setText("");
     }
 }

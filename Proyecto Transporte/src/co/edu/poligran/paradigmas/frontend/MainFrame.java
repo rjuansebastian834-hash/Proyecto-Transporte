@@ -9,19 +9,29 @@ public class MainFrame extends JFrame {
 
         setTitle("Sistema de Transporte");
 
-        setSize(1000, 650);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1000,650);
 
         setLocationRelativeTo(null);
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setLayout(new BorderLayout());
+
+        // COLOR PRINCIPAL NEGRO
+
+        getContentPane().setBackground(
+                new Color(18,18,18)
+        );
+
         // PANEL PRINCIPAL
 
-        JPanel panelPrincipal = new JPanel();
+        JPanel panelPrincipal = new JPanel(
+                new BorderLayout()
+        );
 
-        panelPrincipal.setLayout(new BorderLayout());
-
-        panelPrincipal.setBackground(new Color(15, 23, 42));
+        panelPrincipal.setBackground(
+                new Color(18,18,18)
+        );
 
         // TITULO
 
@@ -31,27 +41,36 @@ public class MainFrame extends JFrame {
         );
 
         titulo.setFont(
-                new Font("Segoe UI", Font.BOLD, 34)
+                new Font("Segoe UI", Font.BOLD, 40)
         );
 
         titulo.setForeground(Color.WHITE);
 
         titulo.setBorder(
-                BorderFactory.createEmptyBorder(30,0,30,0)
+                BorderFactory.createEmptyBorder(40,0,40,0)
         );
 
         panelPrincipal.add(titulo, BorderLayout.NORTH);
 
-        // PANEL MENU
+        // MENU
 
         JPanel menu = new JPanel();
 
-        menu.setLayout(new GridLayout(6,2,20,20));
-
-        menu.setBackground(new Color(15,23,42));
+        menu.setLayout(
+                new GridLayout(6,2,20,20)
+        );
 
         menu.setBorder(
-                BorderFactory.createEmptyBorder(20,40,40,40)
+                BorderFactory.createEmptyBorder(
+                        20,
+                        40,
+                        40,
+                        40
+                )
+        );
+
+        menu.setBackground(
+                new Color(18,18,18)
         );
 
         // BOTONES
@@ -155,38 +174,33 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    // METODO PARA CREAR BOTONES
+    // BOTONES MODERNOS
 
     private JButton crearBoton(String texto) {
 
         JButton boton = new JButton(texto);
 
-        boton.setFocusPainted(false);
-
-        // COLOR SUAVE MODERNO
-
-        boton.setBackground(new Color(191, 219, 254));
-
-        // LETRA NEGRA
-
-        boton.setForeground(Color.BLACK);
-
-        // FUENTE
-
-        boton.setFont(
-                new Font("Segoe UI", Font.BOLD, 18)
+        boton.setBackground(
+                new Color(120,120,120)
         );
 
-        // CURSOR
+        boton.setForeground(Color.WHITE);
+
+        boton.setFont(
+                new Font("Segoe UI", Font.BOLD, 20)
+        );
+
+        boton.setFocusPainted(false);
 
         boton.setCursor(
                 new Cursor(Cursor.HAND_CURSOR)
         );
 
-        // BORDES
-
         boton.setBorder(
-                BorderFactory.createEmptyBorder(15,10,15,10)
+                BorderFactory.createLineBorder(
+                        new Color(180,180,180),
+                        1
+                )
         );
 
         return boton;

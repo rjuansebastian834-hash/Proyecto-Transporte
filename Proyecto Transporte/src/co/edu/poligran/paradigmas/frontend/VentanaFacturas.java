@@ -6,144 +6,345 @@ import java.awt.*;
 
 public class VentanaFacturas extends JFrame {
 
-    private JTextField txtCliente;
-    private JTextField txtValor;
+    private JTextField txtNumero;
+    private JTextField txtTotal;
 
     private JTable tabla;
     private DefaultTableModel modelo;
 
     public VentanaFacturas() {
 
-        setTitle("CRUD Facturas");
+        setTitle("Sistema de Transporte - Facturas");
 
-        setSize(700,500);
+        setSize(850,550);
 
         setLocationRelativeTo(null);
 
-        setVisible(true);
-
         setLayout(new BorderLayout());
 
-        JPanel formulario = new JPanel(new GridLayout(3,2,10,10));
-
-        formulario.setBorder(
-                BorderFactory.createEmptyBorder(20,20,20,20)
+        getContentPane().setBackground(
+                new Color(25,25,25)
         );
 
-        formulario.add(new JLabel("Cliente"));
+        // TITULO
 
-        txtCliente = new JTextField();
+        JLabel titulo = new JLabel(
+                "GESTIÓN DE FACTURAS",
+                SwingConstants.CENTER
+        );
 
-        formulario.add(txtCliente);
+        titulo.setFont(
+                new Font("Segoe UI", Font.BOLD, 28)
+        );
 
-        formulario.add(new JLabel("Valor"));
+        titulo.setForeground(Color.WHITE);
 
-        txtValor = new JTextField();
+        titulo.setBorder(
+                BorderFactory.createEmptyBorder(20,0,20,0)
+        );
 
-        formulario.add(txtValor);
+        add(titulo, BorderLayout.NORTH);
 
-        add(formulario, BorderLayout.NORTH);
+        // PANEL CENTRAL
+
+        JPanel centro = new JPanel(
+                new BorderLayout()
+        );
+
+        centro.setBackground(
+                new Color(25,25,25)
+        );
+
+        // FORMULARIO
+
+        JPanel formulario = new JPanel(
+                new GridLayout(2,2,15,15)
+        );
+
+        formulario.setBackground(
+                new Color(45,45,45)
+        );
+
+        formulario.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.GRAY),
+                        "Datos de la Factura",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        JLabel lblNumero = new JLabel("Número:");
+
+        lblNumero.setForeground(Color.WHITE);
+
+        lblNumero.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        txtNumero = new JTextField();
+
+        JLabel lblTotal = new JLabel("Total:");
+
+        lblTotal.setForeground(Color.WHITE);
+
+        lblTotal.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        txtTotal = new JTextField();
+
+        formulario.add(lblNumero);
+
+        formulario.add(txtNumero);
+
+        formulario.add(lblTotal);
+
+        formulario.add(txtTotal);
+
+        centro.add(formulario, BorderLayout.NORTH);
+
+        // TABLA
 
         modelo = new DefaultTableModel();
 
-        modelo.addColumn("Cliente");
+        modelo.addColumn("Número");
 
-        modelo.addColumn("Valor");
+        modelo.addColumn("Total");
 
         tabla = new JTable(modelo);
 
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        tabla.setRowHeight(28);
+
+        tabla.setFont(
+                new Font("Segoe UI", Font.PLAIN, 14)
+        );
+
+        tabla.getTableHeader().setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        tabla.setSelectionBackground(
+                new Color(90,90,90)
+        );
+
+        tabla.setSelectionForeground(Color.WHITE);
+
+        JScrollPane scroll = new JScrollPane(tabla);
+
+        scroll.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(Color.GRAY),
+                        "Facturas Registradas",
+                        0,
+                        0,
+                        new Font("Segoe UI", Font.BOLD, 16),
+                        Color.WHITE
+                )
+        );
+
+        scroll.setPreferredSize(
+                new Dimension(800,300)
+        );
+
+        centro.add(scroll, BorderLayout.CENTER);
+
+        add(centro, BorderLayout.CENTER);
+
+        // BOTONES
 
         JPanel botones = new JPanel();
 
-        JButton guardar = new JButton("Guardar");
+        botones.setBackground(
+                new Color(25,25,25)
+        );
 
-        JButton actualizar = new JButton("Actualizar");
+        JButton btnGuardar = crearBoton("Guardar");
 
-        JButton eliminar = new JButton("Eliminar");
+        JButton btnActualizar = crearBoton("Actualizar");
 
-        JButton limpiar = new JButton("Limpiar");
+        JButton btnEliminar = crearBoton("Eliminar");
 
-        botones.add(guardar);
+        JButton btnLimpiar = crearBoton("Limpiar");
 
-        botones.add(actualizar);
+        botones.add(btnGuardar);
 
-        botones.add(eliminar);
+        botones.add(btnActualizar);
 
-        botones.add(limpiar);
+        botones.add(btnEliminar);
+
+        botones.add(btnLimpiar);
 
         add(botones, BorderLayout.SOUTH);
 
-        guardar.addActionListener(e -> guardar());
+        // EVENTOS
 
-        actualizar.addActionListener(e -> actualizar());
+        btnGuardar.addActionListener(
+                e -> guardar()
+        );
 
-        eliminar.addActionListener(e -> eliminar());
+        btnActualizar.addActionListener(
+                e -> actualizar()
+        );
 
-        limpiar.addActionListener(e -> limpiar());
+        btnEliminar.addActionListener(
+                e -> eliminar()
+        );
+
+        btnLimpiar.addActionListener(
+                e -> limpiar()
+        );
 
         tabla.getSelectionModel().addListSelectionListener(e -> {
 
             int fila = tabla.getSelectedRow();
 
-            if(fila != -1) {
+            if(fila != -1){
 
-                txtCliente.setText(
+                txtNumero.setText(
                         modelo.getValueAt(fila,0).toString()
                 );
 
-                txtValor.setText(
+                txtTotal.setText(
                         modelo.getValueAt(fila,1).toString()
                 );
             }
         });
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Bienvenido al módulo de Facturas."
+        );
+
+        setVisible(true);
     }
 
-    private void guardar() {
+    // BOTON ESTILO
 
-        if(txtCliente.getText().isEmpty()
-                || txtValor.getText().isEmpty()) {
+    private JButton crearBoton(String texto){
 
-            JOptionPane.showMessageDialog(this,
-                    "Completa todos los campos");
+        JButton boton = new JButton(texto);
+
+        boton.setBackground(
+                new Color(170,170,170)
+        );
+
+        boton.setForeground(Color.BLACK);
+
+        boton.setFocusPainted(false);
+
+        boton.setFont(
+                new Font("Segoe UI", Font.BOLD, 15)
+        );
+
+        boton.setCursor(
+                new Cursor(Cursor.HAND_CURSOR)
+        );
+
+        return boton;
+    }
+
+    // CRUD
+
+    private void guardar(){
+
+        if(txtNumero.getText().isEmpty()
+                || txtTotal.getText().isEmpty()){
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Completa todos los campos"
+            );
 
             return;
         }
 
-        modelo.addRow(new Object[] {
-                txtCliente.getText(),
-                txtValor.getText()
+        try{
+            Double.parseDouble(txtTotal.getText());
+        }
+        catch(Exception e){
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El total debe ser numérico."
+            );
+
+            return;
+        }
+
+        modelo.addRow(new Object[]{
+
+                txtNumero.getText(),
+
+                txtTotal.getText()
         });
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Factura registrada correctamente.\nGracias por usar el sistema."
+        );
 
         limpiar();
     }
 
-    private void actualizar() {
+    private void actualizar(){
 
         int fila = tabla.getSelectedRow();
 
-        if(fila != -1) {
+        if(fila != -1){
 
-            modelo.setValueAt(txtCliente.getText(), fila,0);
+            modelo.setValueAt(
+                    txtNumero.getText(),
+                    fila,
+                    0
+            );
 
-            modelo.setValueAt(txtValor.getText(), fila,1);
+            modelo.setValueAt(
+                    txtTotal.getText(),
+                    fila,
+                    1
+            );
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Factura actualizada correctamente."
+            );
         }
     }
 
-    private void eliminar() {
+    private void eliminar(){
 
         int fila = tabla.getSelectedRow();
 
-        if(fila != -1) {
+        if(fila != -1){
 
-            modelo.removeRow(fila);
+            int opcion = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Desea eliminar esta factura?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if(opcion == JOptionPane.YES_OPTION){
+
+                modelo.removeRow(fila);
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Factura eliminada correctamente."
+                );
+            }
         }
     }
 
-    private void limpiar() {
+    private void limpiar(){
 
-        txtCliente.setText("");
+        txtNumero.setText("");
 
-        txtValor.setText("");
+        txtTotal.setText("");
+
+        txtNumero.requestFocus();
     }
 }
